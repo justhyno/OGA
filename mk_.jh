@@ -1,0 +1,90 @@
+entity Customer {
+    name String required,
+    surname String required,
+    birthdate LocalDate required,
+    taxId String required,
+    idNumber String required,
+    mobile String required,
+    email String required
+}
+
+entity Insurance {
+    policyNumber String required
+}
+
+entity InsuranceType {
+    typeName String required
+}
+
+entity InsuranceVendor {
+    vendorName String required,
+    contactDetails String
+}
+
+entity Contract {
+    startDate LocalDate required,
+    dueDate LocalDate required,
+    paymentStatus String required,
+    contractStatus String required
+}
+
+entity Payment {
+    paymentAmount BigDecimal required,
+    paymentDate LocalDate required,
+    isFullPayment Boolean required,
+    discountApplied BigDecimal
+}
+
+entity User {
+    username String required,
+    password String required,
+    email String required,
+    isAdmin Boolean required
+}
+
+entity Role {
+    roleName String required
+}
+
+entity NotificationTemplate {
+    templateName String required,
+    subject String required,
+    body TextBlob required,
+    type String required,
+    createdAt ZonedDateTime required,
+    updatedAt ZonedDateTime required
+}
+
+relationship OneToMany {
+    Customer{contract} to Contract{customer}
+}
+
+relationship OneToMany {
+    Contract{payment} to Payment{contract}
+}
+
+relationship ManyToOne {
+    Contract{insurance} to Insurance{contract}
+}
+
+relationship OneToMany {
+    Insurance{insuranceType} to InsuranceType{insurance}
+}
+
+relationship ManyToOne {
+    Insurance{insuranceVendor} to InsuranceVendor{insurance}
+}
+
+relationship ManyToMany {
+    User{role} to Role{user}
+}
+
+relationship OneToOne {
+    User{customer} to Customer
+}
+
+service Customer, Insurance, InsuranceType, InsuranceVendor, Contract, Payment, User, Role, NotificationTemplate with serviceClass
+
+dto Customer, Insurance, InsuranceType, InsuranceVendor, Contract, Payment, User, Role, NotificationTemplate with mapstruct
+
+paginate Customer, Insurance, InsuranceType, InsuranceVendor, Contract, Payment, User, Role, NotificationTemplate with pagination
